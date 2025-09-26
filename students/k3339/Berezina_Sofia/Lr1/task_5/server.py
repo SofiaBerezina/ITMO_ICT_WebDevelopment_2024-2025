@@ -132,7 +132,6 @@ class MyHTTPServer:
         for pair in body.split('&'):
             if '=' in pair:
                 key, value = pair.split('=')
-                # ДЕКОДИРУЕМ URL-encoded значения (русские символы)
                 params[key] = unquote(value)
 
         subject = params.get('subject', '')

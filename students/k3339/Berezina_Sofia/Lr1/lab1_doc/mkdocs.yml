@@ -1,6 +1,6 @@
 site_name: Отчёт по лабораторной работе №1
 theme:
-  name: default
+  name: material
 nav:
   - Главная: index.md
   - Задание 1: task1.md
