@@ -11,8 +11,46 @@
 
 Самым интересным этапом было формирование HTTP-ответа. Я создала статусную строку "HTTP/1.1 200 OK", добавила заголовок Content-Type для указания типа содержимого, а затем прочитала HTML-файл через `open('index.html', 'r')`. Все компоненты объединила в правильном формате и отправила клиенту методом `send()`.
 
+```python
+import socket
+
+server = socket.socket()
+
+host = '127.0.0.1'
+port = 1024
+server.bind((host, port))
+
+server.listen(5)
+
+while True:
+    client, (client_host, client_port) = server.accept()
+    client.recv(1000)
+    response_type = 'HTTP/1.1 200 OK\n'
+    headers = 'Content-Type: text/html\n\n'
+    with open('index.html', 'r') as f:
+        html_file = f.read()
+    body = html_file
+    response = response_type + headers + body
+    client.send(response.encode('utf-8'))
+    client.close()
+```
+
 ### 2. Реализация клиентской части
 
 Для клиентской части я создала аналогичный TCP-сокет и установила соединение с сервером через `connect(('127.0.0.1', 1024))`. Мне нужно было сформировать валидный HTTP-запрос согласно стандарту - поэтому я использовала метод GET, указала версию протокола HTTP/1.1 и обязательный заголовок Host.
 
 После отправки запроса я получила ответ от сервера через `recv(1000)`, декодировала его из байтов в строку и вывела в консоль.
+
+```python
+import socket
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+conn.connect(('127.0.0.1', 1024))
+
+http_request = 'GET / HTTP/1.1\r\nHost: localhost:555\r\n\r\n'
+
+conn.send(http_request.encode('utf-8'))
+
+print(conn.recv(1000).decode('utf-8'))
+conn.close()
+```

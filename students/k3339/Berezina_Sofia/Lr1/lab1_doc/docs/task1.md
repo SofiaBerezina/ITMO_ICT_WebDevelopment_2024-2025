@@ -22,8 +22,31 @@
 
 В конце закрыла соединение с помощью close().
 
+```python
+import socket
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+conn.bind(('127.0.0.1', 14900))
+
+data = conn.recvfrom(16384)
+udata = data[0].decode('utf-8')
+print(f'Message: {udata}')
+print('Response: Hello, client')
+
+conn.close()
+```
+
 ### 2. Реализация клиентской части
 
 Клиентская часть также начинается с создания UDP сокета аналогично серверу. Однако вместо bind() я использовала метод connect(), который в случае UDP не устанавливает соединение, а лишь задает адрес по умолчанию для последующих операций send() и recv().
 
 Для отправки сообщения серверу использовала метод send() с сообщением "Hello, server", предварительно преобразованным в байты с помощью префикса b. После отправки клиент ожидает ответ от сервера с помощью recv(16384), декодирует полученные байты и выводит сообщение на экран.
+
+```python
+import socket
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+conn.connect(("127.0.0.1", 14900))
+
+conn.send(b'Hello, server')
+```

@@ -12,8 +12,40 @@
 
 Получение данных от клиента реализовано через recv(16384), где 16384 - размер буфера. Полученные байты я декодировала в строку и разделяла по пробелам на два параметра. После вычисления площади параллелограмма результат выводился на экран сервера.
 
+```python
+import socket
+
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+conn.bind(('127.0.0.1', 14900))
+conn.listen(10)
+
+while True:
+    try:
+        clientsocket, address = conn.accept()
+        data = clientsocket.recv(16384)
+        udata = data.decode("utf-8").split()
+        S = int(udata[0]) * int(udata[1])
+        print(f'Основание a: {udata[0]}, выcота h: {udata[1]}')
+        print(f'Площадь параллелогграмма: {S}')
+    except KeyboardInterrupt:
+        conn.close()
+        break
+```
+
 ### 2. Реализация клиентской части
 
 Клиентская часть начинается аналогично с создания TCP сокета. Вместо bind() используется connect() для подключения к серверу. Я организовала ввод параметров параллелограмма с клавиатуры через два вызова input().
 
 Для отправки данных на сервер я объединила основание и высоту в одну строку, разделив их пробелом. Важно было преобразовать строки в байты с помощью encode('utf-8') перед отправкой через send().
+
+```python
+import socket
+
+conn = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+conn.connect(('127.0.0.1', 14900))
+
+a, h = input(), input()
+conn.send(a.encode('utf-8') + b' ' + h.encode('utf-8'))
+conn.close()
+```
