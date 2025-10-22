@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>Доступные туры</h1>
+<div class="row">
+    {% for tour in tours %}
+    <div class="col-md-6 mb-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ tour.title }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ tour.agency }}</h6>
+                <p class="card-text">{{ tour.description|truncatewords:30 }}</p>
+                <p><strong>Страна:</strong> {{ tour.country }}</p>
+                <p><strong>Период:</strong> {{ tour.start_date }} - {{ tour.end_date }}</p>
+                <p><strong>Цена:</strong> {{ tour.price }} руб.</p>
+                <a href="{% url 'tour_detail' tour.id %}" class="btn btn-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
